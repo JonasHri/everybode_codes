@@ -4,3 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+error = "0.1.9"
+fs = "0.0.5"
