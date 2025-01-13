@@ -72,27 +72,42 @@ int main(){
 }
 
 std::optional<std::vector<std::string>> findUniq(const std::vector<std::vector<std::string>> paths){
-    int heightA=0;
-    int heightB=0; 
-    int currPos=0;
-    for(std::vector<std::string> p:paths){
-        int tmp= p.size();
-        if(heightA==0){
-            heightA=tmp;
-        }else if(heightB==0){
-            heightB=tmp;
-        } else{
-            if(tmp==heightA && heightA==heightB){
-                continue; 
-            } else if(tmp==heightA && heightA!=heightB){
-                return paths[1];
-            } else if(tmp==heightB && heightA != heightB){
-                return paths[0];
-            } else if(heightA == heightB && tmp!=heightA){
-                return paths[currPos];
+    std::vector<int> lens;
+    std::cout <<"es gibt paths: "<< paths.size()<< std::endl; 
+    lens.reserve(paths.size());
+    for (int i=0; i<paths.size(); i++){
+        lens[i]=paths[i].size();
+    }
+    std::vector<int>::iterator resIt;
+    resIt = std::max_element(lens.begin(), lens.end());
+    int maxValue= *resIt;
+    for (int i=0; i<paths.size(); i++){
+       std::cout << i<< ": "<<lens[i]<< std::endl; 
+    }
+
+    std::vector<int> quantities;
+    quantities.reserve(maxValue+1);
+    for(int i=0; i<=maxValue; i++){
+        for(const int l: lens){
+            if(l==i){
+                quantities[i]++;
             }
         }
-        currPos++; 
+    }
+    for(int i=0; i<=maxValue; i++){
+        std::cout << i << ": "<< quantities[i]<<std::endl;
+    }
+    int uniqLen;
+    for(int i=0; i<=maxValue; i++){
+        if(quantities[i]==1){
+            std::cout <<"found 1: "<< i <<std::endl;
+            uniqLen=i;
+        }
+    }
+    for(int i=0; i<paths.size(); i++){
+        if (lens[i]==uniqLen){
+            return paths[i];
+        }
     }
     return std::nullopt; 
 }
