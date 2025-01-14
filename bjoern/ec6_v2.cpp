@@ -78,15 +78,46 @@ std::optional<std::vector<std::string>> findUniq(const std::vector<std::vector<s
     for (int i=0; i<paths.size(); i++){
         lens[i]=paths[i].size();
     }
+    std::cout << "lens size: "<<  lens.size() << std::endl;
+
     std::vector<int>::iterator resIt;
     resIt = std::max_element(lens.begin(), lens.end());
     int maxValue= *resIt;
     for (int i=0; i<paths.size(); i++){
        std::cout << i<< ": "<<lens[i]<< std::endl; 
     }
+    for (std::string p: paths[7]){
+        std::cout << p ;
+    }
+    std::cout <<std::endl; 
+
+    return std::nullopt;
+}
+    /*
+    std::cout << "lens size: "<<  lens.size() << std::endl;
 
     std::vector<int> quantities;
     quantities.reserve(maxValue+1);
+
+    std::cout << "max value: "<< maxValue << " at: " << *resIt << std::endl; 
+    //std::cout << "it first: "<<*lens.begin() << " it-last: "<<*lens.end()<<std::endl; 
+
+     
+    std::cout << "iterator test"<< std::endl; 
+    std::vector<int>::iterator it= lens.end();
+    it++; 
+    std::cout << *(it) << std::endl; 
+    std::cout << lens.size() << std::endl; 
+    for(std::vector<int>::iterator it= lens.begin(); it!= lens.end(); it++){
+        std::cout << *it << std::endl;
+        std::cout<< "naseweise"<< std::endl;  
+    }
+    for(int i=0; i< lens.size(); i++){
+        std::cout << lens[i] <<std::endl; 
+    }
+    std::cout << "iterator test ende"<< std::endl; 
+    
+
     for(int i=0; i<=maxValue; i++){
         for(const int l: lens){
             if(l==i){
@@ -110,4 +141,4 @@ std::optional<std::vector<std::string>> findUniq(const std::vector<std::vector<s
         }
     }
     return std::nullopt; 
-}
+    */
