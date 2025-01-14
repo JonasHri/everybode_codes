@@ -41,6 +41,6 @@ int main(){
             pos=tmp + w.length();
         }
     }
-    std::cout<< occurances <<std::endl; 
+    std::cout<<"aufgabe 1. "<< occurances <<std::endl; 
     return 0; 
 }
