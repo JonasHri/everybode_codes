@@ -41,7 +41,8 @@ int main(){
         }
     }
     std::vector<std::string> found = text;
-    std::vector<std::string> reversedFound= reverseText; 
+    std::reverse(reverseText.begin(), reverseText.end());
+    std::vector<std::string> reversedFound= reverseText;
     std::string reversedWord; 
     for(const std::string w: words){
         for(int i=0; i<text.size(); i++){
@@ -50,11 +51,13 @@ int main(){
                     match(text,found,w,i,j);
                     reversedWord= w;
                     std::reverse(reversedWord.begin(), reversedWord.end());
-                    match(reverseText, reversedFound, reversedWord, i, j);
+                    match(reverseText, reversedFound, w, i, j);
                 }
             }
         } 
     }
+    
+    std::reverse(reversedFound.begin(), reversedFound.end());
     for(std::string line: reversedFound){
         std::reverse(line.begin(), line.end());
     }
@@ -76,11 +79,17 @@ int main(){
     }
     std::cout<< cnt << std::endl; 
     
-    /*
-    for( const std::string line: found){
-        std::cout<< line<< std::endl;
+    std::ofstream outfile("out.txt");
+
+    for(const std::string line: text){
+        outfile<< line<< std::endl; 
     }
-    */
+    outfile <<std::endl; 
+    for( const std::string line: found){
+        outfile<< line<< std::endl;
+    }
+    outfile.close(); 
+    
     return 0; 
 }
 
