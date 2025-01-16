@@ -30,7 +30,7 @@ fn find_powers(field: &Vec<Vec<char>>) -> Vec<(usize, usize, usize)> {
     indexes
 }
 fn main() {
-    let mut field: Vec<Vec<char>> = fs::read_to_string("./inputs/everybody_codes_e2024_q12_p2.txt")
+    let field: Vec<Vec<char>> = fs::read_to_string("./inputs/everybody_codes_e2024_q12_p2.txt")
         .unwrap()
         .lines()
         .map(|line| line.chars().collect())
