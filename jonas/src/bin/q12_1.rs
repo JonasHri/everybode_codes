@@ -15,7 +15,7 @@ fn find_indexes(field: &Vec<Vec<char>>, target: char) -> Vec<(usize, usize)> {
 }
 
 fn main() {
-    let mut field: Vec<Vec<char>> = fs::read_to_string("./inputs/everybody_codes_e2024_q12_p1.txt")
+    let field: Vec<Vec<char>> = fs::read_to_string("./inputs/everybody_codes_e2024_q12_p1.txt")
         .unwrap()
         .lines()
         .map(|line| line.chars().collect())
