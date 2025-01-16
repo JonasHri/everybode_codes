@@ -85,7 +85,7 @@ void match(const std::vector<std::string>& text, std::vector<std::string>& found
                 bool hit= true; 
                 for(int i=0; i< word.length(); i++){
                     int Xnew= x - i*dir;
-                    int Ynew= (y - i*(1-dir)) % text[x].length();
+                    int Ynew= ((y - i*(1-dir)) + text[x].length()) % text[x].length();
                     if(Xnew<0 || text[Xnew][Ynew]!= word[i]){
                         hit=false;
                         break; 
