@@ -10,7 +10,7 @@ int main(){
     std::vector<std::string> map; 
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q03_p1.txt");
+    std::fstream file("everybody_codes_e2024_q03_p2.txt");
     if(!file.is_open()){
         std::cerr << "file not foiund \n";
         return 1;
