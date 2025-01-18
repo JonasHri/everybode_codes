@@ -1,5 +1,4 @@
 use std::collections::{HashSet, VecDeque};
-use std::hash::Hash;
 use std::{fs, usize};
 
 fn dir_to_cord(dir: char) -> (i32, i32, i32) {
@@ -79,22 +78,19 @@ fn main() {
                     break;
                 }
 
-                for dx in position.0 - 1..=position.0 + 1 {
-                    for dy in position.1 - 1..=position.1 + 1 {
-                        for dz in position.2 - 1..=position.2 + 1 {
-                            if space[dx][dy][dz] < 1 {
-                                continue;
-                            }
-                            if dx.abs_diff(position.0)
-                                + dy.abs_diff(position.1)
-                                + dz.abs_diff(position.2)
-                                != 1
-                            {
-                                continue;
-                            }
-                            queue.push_back((dx, dy, dz, position.3 + 1));
-                        }
+                let moves = vec![
+                    (position.0 + 1, position.1, position.2),
+                    (position.0 - 1, position.1, position.2),
+                    (position.0, position.1 + 1, position.2),
+                    (position.0, position.1 - 1, position.2),
+                    (position.0, position.1, position.2 + 1),
+                    (position.0, position.1, position.2 - 1),
+                ];
+                for (dx, dy, dz) in moves {
+                    if space[dx][dy][dz] < 1 {
+                        continue;
                     }
+                    queue.push_back((dx, dy, dz, position.3 + 1));
                 }
             }
         }
