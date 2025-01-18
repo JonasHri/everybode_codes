@@ -23,13 +23,23 @@ int main(){
 
     std::vector<std::vector<int>> numMap = makeintmap(map);
     while(increase(numMap)){
-
     }
     /*
     for(const std::string m: map){
         std::cout << m << std::endl; 
     }
     */
+
+
+    std::ofstream outfile("ec3_out.txt");
+    for(const std::vector<int> row: numMap){
+        for(const int pos: row){
+            outfile<< pos;
+        }  
+        outfile <<std::endl; 
+    }
+    outfile.close(); 
+
     int erg= count(numMap);
     std::cout << erg << std::endl; 
     return 0; 
@@ -59,7 +69,7 @@ std::vector<std::vector<int>> makeintmap (const std::vector<std::string>& map){
             if(c=='.'){
                 line.push_back(-1);
             }else if(c=='#'){
-                line.push_back(0);
+                line.push_back(1);
             }
             else{
                 std::cerr<< "illegal char met: "<< c <<std::endl; 
@@ -84,13 +94,14 @@ bool increase(std::vector<std::vector<int>>& map){
             }
             //alle 4 nachbarn sind gleich:
             std::vector<std::pair<int, int>> directions ={
-                {-1,0}, {1,0}, {0,-1}, {0,1} , {1,1}, {1,-1}, {-1, 1}, {-1,-1}
+                {-1,0}, {1,0}, {0,-1}, {0,1}, {1,1}, {1,-1}, {-1, 1}, {-1,-1}
             };
             bool allEqual=true;
-            for( auto[dx, dy]: directions){
+            for(auto[dx, dy]: directions){
                 int xnew = i+dx; 
                 int ynew = j+dy;
-                if(xnew<0 || ynew < 0 || xnew >= map.size() || map[i].size()){
+                if(xnew<0 || ynew<0 || xnew>=map.size() || ynew>=map[i].size()){
+                    //std::cout <<"false @: "<< xnew << ", "<< ynew << " with: "<< dx<<", "<<dy<<std::endl; 
                     allEqual=false; 
                     break; 
                 }
@@ -101,10 +112,10 @@ bool increase(std::vector<std::vector<int>>& map){
             }
             if(allEqual){
                 changed= true;
-                char curr = map[i][j];
+                map[i][j] ++;
                 //std::cout << curr <<std:: endl; 
-                int next= curr+1; 
-                map[i][j]= next;   
+                //int next= curr+1; 
+                //map[i][j]= next;   
                 //std::cout << next << " h"<< std::endl; 
             }
         }
