@@ -53,17 +53,7 @@ int main(){
     }
     if(auto erg=findUniq(paths)){
         std::cout << "ergebnis ist: ";
-        for(int i= erg->size() -1; i>=0; i--){
-            //std::cerr << i; 
-          //  std::cout <<i << ": "; 
-            std::cout << (*erg)[i]<< " ";
-        }
-        //std::cout << (*erg)[0];
-        /*std::cout << "\n und das 2." << std::endl;
-        for(const auto l: *erg){
-            std::cout << l<<" ";
-        } */
-        std::cout <<std::endl; 
+        c:\Users\Björn Staats\Downloads\everybody_codes_e2024_q07_p2.txt
     } else{
         std::cout << "no erg" <<std::endl;
     }
