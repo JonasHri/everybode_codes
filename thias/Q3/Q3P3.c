@@ -14,9 +14,9 @@ int nachbarn(int level, char field[53][144]){
                 field[u][v] = n+1;
                 ret += 1;
             }
-            printf("%c", field[u][v]);
+            //printf("%c", field[u][v]);
         }
-        printf("\n");
+        //printf("\n");
     }
 
 
