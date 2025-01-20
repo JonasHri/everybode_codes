@@ -57,6 +57,8 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "array": "cpp",
-        "optional": "cpp"
+        "optional": "cpp",
+        "deque": "cpp",
+        "stack": "cpp"
     }
 }
