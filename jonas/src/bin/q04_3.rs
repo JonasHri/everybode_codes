@@ -8,7 +8,11 @@ fn main() {
         .collect();
 
     nails.sort();
-    let target_height = nails.iter().sum::<usize>() / nails.len();
+    let target_height = nails[nails.len() / 2];
+
+    let target_height_alt = nails.iter().sum::<usize>() / nails.len();
+
+    println!("{} {}", target_height, target_height_alt);
 
     let hits = nails
         .iter()
