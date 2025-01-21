@@ -7,7 +7,7 @@ int main(){
     std::vector<int> nails;
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q04_p1.txt");
+    std::fstream file("everybody_codes_e2024_q04_p2.txt");
     if(!file.is_open()){
         std::cerr << "file not found \n";
         return 1;
