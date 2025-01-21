@@ -3,9 +3,9 @@
 #define PI 4
 
 int main(){
-    int list[11];
+    int list[200];
     int min = 9999;
-    for(int c = 0; c < 11; c++){
+    for(int c = 0; c < 200; c++){
         scanf("%d", &list[c]);
         if(list[c] != 0 && list[c] < min)
             min = list[c];
@@ -14,7 +14,7 @@ int main(){
 
     printf("\n%d\n", min);
     int total = 0;
-    for(int c = 0; c < 11; c++){
+    for(int c = 0; c < 200; c++){
         total += list[c]-min;
     } 
 
