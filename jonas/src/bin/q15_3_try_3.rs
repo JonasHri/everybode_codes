@@ -2,6 +2,7 @@ use itertools::iproduct;
 use itertools::Itertools;
 use std::collections::{HashMap, VecDeque};
 use std::{fs, usize};
+use tqdm::tqdm;
 
 fn find_indexes(field: &Vec<Vec<char>>, target: char) -> Vec<(usize, usize)> {
     let mut indexes = Vec::new();
@@ -43,11 +44,12 @@ fn path_length(field: &Vec<Vec<char>>, start: (usize, usize), end: (usize, usize
 }
 
 fn main() {
-    let field_alt: Vec<Vec<char>> = fs::read_to_string("./inputs/everybody_codes_e2024_q15_p2.txt")
-        .unwrap()
-        .lines()
-        .map(|line| line.chars().collect())
-        .collect();
+    let field_alt: Vec<Vec<char>> =
+        fs::read_to_string("./inputs/everybody_codes_e2024_q15_p3_try_3.txt")
+            .unwrap()
+            .lines()
+            .map(|line| line.chars().collect())
+            .collect();
 
     let mut field = vec![vec!['#'; field_alt[0].len() + 2]; field_alt.len() + 2];
     for (i, col) in field_alt.iter().enumerate() {
@@ -55,30 +57,21 @@ fn main() {
             field[i + 1][j + 1] = val;
         }
     }
+    let middle = 614;
+    // let start_pos: (usize, usize) = find_indexes(&field, 'S')[0];
+    // let herbs = "GHIJKZ".chars().collect::<Vec<char>>();
 
-    let mut start_pos: (usize, usize) = (1, 1);
+    let left = 430;
+    // let start_pos: (usize, usize) = find_indexes(&field, 'E')[0];
+    // let herbs = "ABCD".chars().collect::<Vec<char>>();
 
-    for i in 1..field.len() - 1 {
-        if field[i][1] == '.' {
-            start_pos = (i, 1)
-        }
-        if field[i][field[i].len() - 2] == '.' {
-            start_pos = (i, field[i].len() - 2);
-        }
-    }
+    let right = 446;
+    let start_pos: (usize, usize) = find_indexes(&field, 'R')[0];
+    let herbs = "NOPQ".chars().collect::<Vec<char>>();
 
-    for i in 1..field[0].len() - 1 {
-        if field[1][i] == '.' {
-            start_pos = (1, i)
-        }
-        if field[field.len() - 2][i] == '.' {
-            start_pos = (field.len() - 2, i);
-        }
-    }
+    let extra_steps = 12;
 
-    println!("{:?}", start_pos);
-
-    let herbs = vec!['A', 'B', 'C', 'D', 'E'];
+    println!("{} ", middle + left + right + extra_steps);
 
     let herb_positions: Vec<Vec<(usize, usize)>> =
         herbs.iter().map(|x| find_indexes(&field, *x)).collect();
@@ -87,18 +80,24 @@ fn main() {
     let mut seen: HashMap<((usize, usize), (usize, usize)), usize> = HashMap::new();
 
     let order: Vec<usize> = herbs.iter().enumerate().map(|(i, _)| i).collect();
-    for (idx, ord) in order.iter().permutations(herbs.len()).enumerate() {
-        print!("{}, ", idx);
+    for ord in tqdm(order.iter().permutations(herbs.len())) {
         for v in iproduct!(
             &vec![start_pos],
             &herb_positions[*ord[0]],
             &herb_positions[*ord[1]],
             &herb_positions[*ord[2]],
             &herb_positions[*ord[3]],
-            &herb_positions[*ord[4]],
+            // &herb_positions[*ord[4]],
+            // &herb_positions[*ord[5]],
+            // &herb_positions[*ord[6]],
+            // &herb_positions[*ord[7]],
+            // &herb_positions[*ord[8]],
+            // &herb_positions[*ord[9]],
             &vec![start_pos],
         ) {
-            let targets = vec![*v.0, *v.1, *v.2, *v.3, *v.4, *v.5, *v.6];
+            let targets = vec![
+                *v.0, *v.1, *v.2, *v.3, *v.4, *v.5, // *v.6, *v.7, // *v.8, *v.9, *v.10,
+            ];
             let mut total_distance = 0;
             for i in 0..targets.len() - 1 {
                 let mut run = vec![targets[i], targets[i + 1]];
@@ -113,7 +112,9 @@ fn main() {
                     seen.insert(key, dist);
                 }
             }
-            shortest_path = shortest_path.min(total_distance);
+            if total_distance < shortest_path {
+                shortest_path = total_distance;
+            }
         }
     }
     println!("{}", shortest_path);
