@@ -111,6 +111,7 @@ std::vector<std::pair<std::string, int>> merge(const std::vector<std::pair<std::
     erg.reserve(left.size()+right.size());
     int pleft=0, pright=0;
     while (pleft < left.size() && pright < right.size()) {
+        //std::cout << left[pleft].second <<std::endl;
         if (left[pleft].second >= right[pright].second) {
              
             erg.push_back(left[pleft++]);
