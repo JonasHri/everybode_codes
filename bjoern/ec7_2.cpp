@@ -16,7 +16,7 @@ int main(){
     std::vector<std::pair<std::string, std::string>> rules;
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q07_p2.txt");
+    std::fstream file("everybody_codes_e2024_q07_p2_TEST.txt");
     if(!file.is_open()){
         std::cerr<< "file not found \n";
         return 1; 
@@ -42,7 +42,7 @@ int main(){
     //parse map:
     std::string map;
     std::stack<std::string> stack;
-    std::fstream file2("everybody_codes_e2024_q07_p2_MAP.txt");
+    std::fstream file2("everybody_codes_e2024_q07_p2_MAP_TEST.txt");
     if(!file2.is_open()){
         std::cerr<< "file not found \n";
         return 1; 
@@ -70,6 +70,10 @@ int main(){
         stack.pop(); 
     }
 
+
+    std::string mapTest = "S+===++-=+=-";
+    std::cout << mapTest <<std::endl;
+    std::cout << map <<std::endl; 
     std::string erg= move(map, rules); 
     std::cout<< erg << std::endl; 
     return 0; 
@@ -82,9 +86,9 @@ std::string move(const std::string& map, const std::vector<std::pair<std::string
     for(int i=0; i<rules.size(); i++){
         power.push_back(std::make_pair(rules[i].first, playerPath(map, rules[i].second)));
     }
-    mergesort(power); 
-    for(int i=0; i< power.size(); i++){
-        order.append(power[i].first);
+    std::vector<std::pair<std::string, int>> sorted= mergesort(power); 
+    for(int i=0; i< sorted.size(); i++){
+        order.append(sorted[i].first);
     }
     return order; 
 }
