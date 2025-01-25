@@ -16,7 +16,7 @@ int main(){
     std::vector<std::pair<std::string, std::string>> rules;
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q07_p2_TEST.txt");
+    std::fstream file("everybody_codes_e2024_q07_p2.txt");
     if(!file.is_open()){
         std::cerr<< "file not found \n";
         return 1; 
@@ -42,7 +42,7 @@ int main(){
     //parse map:
     std::string map;
     std::stack<std::string> stack;
-    std::fstream file2("everybody_codes_e2024_q07_p2_MAP_TEST.txt");
+    std::fstream file2("everybody_codes_e2024_q07_p2_MAP.txt");
     if(!file2.is_open()){
         std::cerr<< "file not found \n";
         return 1; 
@@ -72,8 +72,8 @@ int main(){
 
 
     std::string mapTest = "S+===++-=+=-";
-    std::cout << mapTest <<std::endl;
-    std::cout << map <<std::endl; 
+    //std::cout << mapTest <<std::endl;
+    //std::cout << map <<std::endl; 
     std::string erg= move(map, rules); 
     std::cout<< erg << std::endl; 
     return 0; 
@@ -83,8 +83,14 @@ std::string move(const std::string& map, const std::vector<std::pair<std::string
     std::string order="";
     std::vector<std::pair<std::string, int>> power;
     power.reserve(rules.size());
+    
+    //std::cout << "    1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12"<<std::endl;
     for(int i=0; i<rules.size(); i++){
+        //std::cout << rules[i].first << ": " ; 
         power.push_back(std::make_pair(rules[i].first, playerPath(map, rules[i].second)));
+    }
+    for(auto [n, s]: power){
+        std::cout << n << ": "<< s <<std::endl; 
     }
     std::vector<std::pair<std::string, int>> sorted= mergesort(power); 
     for(int i=0; i< sorted.size(); i++){
@@ -113,7 +119,7 @@ std::vector<std::pair<std::string, int>> mergesort(std::vector<std::pair<std::st
 std::vector<std::pair<std::string, int>> merge(const std::vector<std::pair<std::string, int>>& left, const std::vector<std::pair<std::string, int>>& right){
     std::vector<std::pair<std::string, int>> erg;
     erg.reserve(left.size()+right.size());
-    int pleft=0, pright=0;
+    int pleft=0, pright=0; 
     while (pleft < left.size() && pright < right.size()) {
         //std::cout << left[pleft].second <<std::endl;
         if (left[pleft].second >= right[pright].second) {
@@ -138,16 +144,25 @@ int playerPath(const std::string& map, const std::string& rules) {
     size_t mapLen = map.length();
     size_t rulesLen = rules.length();
 
-    for (size_t i = 0; i < 10 * mapLen; i++) {
-        int mapPos = i % mapLen;
+    for (size_t i = 0; i < 10 * mapLen; i++) { //erstmal eine Runde anschauen
+        int mapPos = (i+1) % mapLen ;
         int rulePos = i % rulesLen;
-        if (map[mapPos] == '=') {
+        // if( i== mapLen -1 ){
+        //     std::cout << " [curr b4 increasing:"<< currentStep << "] "; 
+        // }
+        if (map[mapPos] == '=' || map[mapPos]=='S') {
             currentStep += step(rules[rulePos]);
         } else {
             currentStep += step(map[mapPos]);
         }
+        //std::cout << currentStep << ", ";
+        // if( i== mapLen -1 ){
+        //     std::cout << " last maptile: "<< map[mapPos] << ", last rule: "<< rules[rulePos]; 
+        // }
+        //std::cout << "(m:"<< map[mapPos]<< " r: "<< rules[rulePos] << ")"; 
         totalSteps += currentStep;
     }
+    //std::cout << std::endl; 
     return totalSteps;
 }
 
