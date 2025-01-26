@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 #include <iterator>
+#include <unordered_map>
+#include <cmath>
 
 namespace std{
     ostream& operator<<(ostream& os, const std::vector<int>& r){
@@ -47,12 +49,12 @@ std::vector<std::vector<int>> transpose(const std::vector<std::vector<int>>& m){
 }
 
 void dance(std::vector<std::vector<int>>& map, const int& turn);
-void shout(const std::vector<std::vector<int>>& map);
+int shout(const std::vector<std::vector<int>>& map);
 
 int main(){
     std::vector<std::vector<int>> map; 
 
-    std::fstream file("everybody_codes_e2024_q05_p1.txt");
+    std::fstream file("everybody_codes_e2024_q05_p2.txt");
     std::string line; 
     while(std::getline(file, line)){
         std::stringstream ss(line);
@@ -66,20 +68,40 @@ int main(){
 
     std::vector<std::vector<int>> m= transpose(map);
     
-    for(int i=1; i<=10; i++){
+    std::unordered_map<int,int> counter; 
+    //std::cout <<m<<std::endl; 
+
+    int i=1;
+    while(true) {
         dance(m, i);
-        shout(m); 
+        long shoutet= shout(m); 
+        counter[shoutet]++; 
+        if(counter[shoutet] ==2024){
+            std::cout << "ßöööß: "<< shoutet << " "<< shoutet * i << std::endl; //beginnt mit einer 2 das erg
+            break; 
+        }
+        // std::cout << i<<": "<< shoutet << " "<< counter[shoutet] <<std::endl; 
+        // if(i==10){
+        //     break; 
+        // }
+        i++; 
     }
 
 
     return 0; 
 }
 
-void shout(const std::vector<std::vector<int>>& map){
-    for(const std::vector<int> col: map){
-        std::cout << col[0];
+int shout(const std::vector<std::vector<int>>& map){
+    int erg=0;
+    for(int i=0; i< map.size(); i++){
+        if(erg!=0){
+            int len = log10(map[i][0])+1; 
+            erg *= std::pow(10, len);
+        } 
+        erg += map[i][0]; 
     }
-    std::cout<< std::endl; 
+    //std::cout<< std::endl;  
+    return erg; 
 }
 
 void dance(std::vector<std::vector<int>>& map, const int& turn){
@@ -92,6 +114,8 @@ void dance(std::vector<std::vector<int>>& map, const int& turn){
     for(int i=1; i< dancer; i++){
         if(it== map[dancingCol].end()){
             dir=-1;
+        } else if(it== map[dancingCol].begin() && i!=1){
+            dir=1; 
         }
         it += dir; 
     }
