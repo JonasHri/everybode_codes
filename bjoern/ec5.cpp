@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <iterator>
 
 namespace std{
     ostream& operator<<(ostream& os, const std::vector<int>& r){
@@ -12,9 +13,19 @@ namespace std{
         return os; 
     }
     ostream& operator<<(ostream& os, const std::vector<std::vector<int>>& r){
-        for (int i=0; i< r[0].size(); i++){
+        int maxcol=0;
+        for(int i=0; i< r.size(); i++){
+            if(r[i].size() >maxcol){
+                maxcol = r[i].size(); 
+            }
+        }
+        for (int i=0; i< maxcol; i++){
             for (int j=0;j< r.size(); j++){
-                os << r[j][i] << "\t";
+                if(i>=r[j].size()){
+                    os << "\t";
+                }else{
+                    os << r[j][i] << "\t";
+                }
             }
             os << std::endl; 
         }
@@ -35,6 +46,9 @@ std::vector<std::vector<int>> transpose(const std::vector<std::vector<int>>& m){
     return transposed; 
 }
 
+void dance(std::vector<std::vector<int>>& map, const int& turn);
+void shout(const std::vector<std::vector<int>>& map);
+
 int main(){
     std::vector<std::vector<int>> map; 
 
@@ -51,15 +65,36 @@ int main(){
     }
 
     std::vector<std::vector<int>> m= transpose(map);
-     
-    std::cout << m;
+    
+    for(int i=1; i<=10; i++){
+        dance(m, i);
+        shout(m); 
+    }
+
 
     return 0; 
-
 }
 
-void dance(std::vector<std::vector<int>>& map, const int& turns){
-    int dancer = map[0][0];
-    int colToDance= map.size();
+void shout(const std::vector<std::vector<int>>& map){
+    for(const std::vector<int> col: map){
+        std::cout << col[0];
+    }
+    std::cout<< std::endl; 
+}
+
+void dance(std::vector<std::vector<int>>& map, const int& turn){
+    int startPos = (turn-1)%map.size();
+    int dancer = map[startPos][0];
+    int dancingCol = (startPos+1) % map.size(); 
+    map[startPos].erase(map[startPos].begin());
+    auto it = map[dancingCol].begin();
+    int dir= 1; 
+    for(int i=1; i< dancer; i++){
+        if(it== map[dancingCol].end()){
+            dir=-1;
+        }
+        it += dir; 
+    }
+    map[dancingCol].insert(it ,dancer);
 
 }
