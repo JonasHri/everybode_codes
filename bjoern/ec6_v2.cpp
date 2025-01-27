@@ -53,7 +53,14 @@ int main(){
     }
     if(auto erg=findUniq(paths)){
         std::cout << "ergebnis ist: ";
-        c:\Users\Björn Staats\Downloads\everybody_codes_e2024_q07_p2.txt
+        //müssend ei Stirngs noch umdrehen:
+        auto tmp=*erg; 
+        std::reverse(tmp.begin(), tmp.end());
+        for(const std::string p: tmp){
+            std::cout <<p;
+        }
+        std::cout <<"@"<<std::endl; 
+        // c:\Users\Björn Staats\Downloads\everybody_codes_e2024_q07_p2.txt
     } else{
         std::cout << "no erg" <<std::endl;
     }
@@ -65,21 +72,32 @@ std::optional<std::vector<std::string>> findUniq(const std::vector<std::vector<s
     std::vector<int> lens;
     std::cout <<"es gibt paths: "<< paths.size()<< std::endl; 
     lens.reserve(paths.size());
+    int maxValue= 0;
     for (int i=0; i<paths.size(); i++){
         lens[i]=paths[i].size();
+        if(lens[i]>maxValue){
+            maxValue=lens[i];
+        }
     }
     std::cout << "lens size: "<<  lens.size() << std::endl;
-
-    std::vector<int>::iterator resIt;
-    resIt = std::max_element(lens.begin(), lens.end());
-    int maxValue= *resIt;
+    int* lenArr= new int[maxValue+1]; 
     for (int i=0; i<paths.size(); i++){
+        lenArr[lens[i]]++;
        std::cout << i<< ": "<<lens[i]<< std::endl; 
     }
-    for (std::string p: paths[7]){
-        std::cout << p ;
+    int uniqLen=-1; 
+    for(int i=0; i< maxValue+1; i++){
+        if(lenArr[i] ==1){
+            uniqLen=i; 
+        }
     }
-    std::cout <<std::endl; 
+    delete[] lenArr;
+
+    for(int i=0; i< paths.size(); i++){
+        if(paths[i].size() == uniqLen){
+            return paths[i];
+        }
+    } 
 
     return std::nullopt;
 }
