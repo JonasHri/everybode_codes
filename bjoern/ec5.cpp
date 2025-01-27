@@ -49,12 +49,12 @@ std::vector<std::vector<int>> transpose(const std::vector<std::vector<int>>& m){
 }
 
 void dance(std::vector<std::vector<int>>& map, const int& turn);
-int shout(const std::vector<std::vector<int>>& map);
+long shout(const std::vector<std::vector<int>>& map);
 
 int main(){
     std::vector<std::vector<int>> map; 
 
-    std::fstream file("everybody_codes_e2024_q05_p2.txt");
+    std::fstream file("everybody_codes_e2024_q05_p3.txt");
     std::string line; 
     while(std::getline(file, line)){
         std::stringstream ss(line);
@@ -70,15 +70,21 @@ int main(){
     
     std::unordered_map<int,int> counter; 
     //std::cout <<m<<std::endl; 
+    std::cout  << log10(10)<<" na"<<std::endl;
 
     int i=1;
+    long maxVal=0;
     while(true) {
         dance(m, i);
         long shoutet= shout(m); 
         counter[shoutet]++; 
-        if(counter[shoutet] ==2024){
+        if(counter[shoutet] ==10000){
             std::cout << "ßöööß: "<< shoutet << " "<< shoutet * i << std::endl; //beginnt mit einer 2 das erg
+            std::cout << maxVal << std::endl;
             break; 
+        }
+        if (shoutet > maxVal){
+            maxVal = shoutet;
         }
         // std::cout << i<<": "<< shoutet << " "<< counter[shoutet] <<std::endl; 
         // if(i==10){
@@ -91,8 +97,8 @@ int main(){
     return 0; 
 }
 
-int shout(const std::vector<std::vector<int>>& map){
-    int erg=0;
+long shout(const std::vector<std::vector<int>>& map){
+    long erg=0;
     for(int i=0; i< map.size(); i++){
         if(erg!=0){
             int len = log10(map[i][0])+1; 
