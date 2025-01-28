@@ -59,6 +59,7 @@
         "array": "cpp",
         "optional": "cpp",
         "deque": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "algorithm": "cpp"
     }
 }

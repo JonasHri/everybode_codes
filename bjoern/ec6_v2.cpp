@@ -12,7 +12,7 @@ int main(){
     std::unordered_map<std::string, std::string> input;
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q06_p1.txt");
+    std::fstream file("everybody_codes_e2024_q06_p2.txt");
     if(!file.is_open()){
         std::cerr <<"file not foiund"<<std::endl;
     }
@@ -22,7 +22,7 @@ int main(){
         std::string kids = line.substr(sep+1);
         input.insert({father, kids});
     }
-
+    std::cout <<"schiiissch"<<std::endl; 
     /*
     for(const std::pair<const std::string, std::vector<std::string>>& p: input){
         std::cout <<p.first <<": ";
@@ -57,7 +57,8 @@ int main(){
         auto tmp=*erg; 
         std::reverse(tmp.begin(), tmp.end());
         for(const std::string p: tmp){
-            std::cout <<p;
+            //für p2 nur den ersten Buchstaben printen:
+            std::cout <<p[0];
         }
         std::cout <<"@"<<std::endl; 
         // c:\Users\Björn Staats\Downloads\everybody_codes_e2024_q07_p2.txt
