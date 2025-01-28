@@ -62,7 +62,7 @@ fn main() {
                 continue;
             }
 
-            if field[ci][cj] == 'S' && (a + b + c) == 3 && l_alt >= 10_000 {
+            if field[ci][cj] == 'S' && (a + b + c) == 3 && l_alt >= 10_001 {
                 completed = true;
                 break;
             }
