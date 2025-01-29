@@ -9,7 +9,9 @@
 std::optional<std::vector<std::string>> findUniq(const std::vector<std::vector<std::string>> paths);
 
 int main(){
-    std::unordered_map<std::string, std::string> input;
+    // std::unordered_map<std::string, std::string> input;
+    
+    std::vector<std::pair<std::string, std::string>> in; 
 
     std::string line;
     std::fstream file("everybody_codes_e2024_q06_p2.txt");
@@ -20,7 +22,8 @@ int main(){
         size_t sep= line.find(':');
         std::string father = line.substr(0, sep);
         std::string kids = line.substr(sep+1);
-        input.insert({father, kids});
+        // input.insert({father, kids});
+        in.push_back(std::make_pair(father, kids));
     }
     std::cout <<"schiiissch"<<std::endl; 
     /*
@@ -34,23 +37,26 @@ int main(){
     */
     std::vector<std::string> path; 
     std::vector<std::vector<std::string>> paths; 
-    std::pair<std::string, std::string> curr; 
-    for(const std::pair<const std::string, std::string>& node: input){
-        if(node.second.contains('@')){  //gibts in c++23 :)
+    std::string curr; 
+    for(const auto& [to, from]: in){
+        if(from.contains("@")){  //gibts in c++23 :)
+            std::cout << "checking one "<<std::endl; 
             path.clear();
-            path.push_back(node.first);
-            curr= node; 
-            while(curr.first!="RR"){
-                for(const std::pair<const std::string, std::string>& otherNode: input){
-                    if(otherNode.second.contains(curr.first)){
-                        curr=otherNode; 
-                        path.push_back(curr.first);
+            path.push_back(to);
+            curr= to; 
+            while(curr!="RR"){
+                for(const auto& [otherTo, otherFrom]: in){
+                    if(otherFrom.contains(curr)){
+                        // std::cout << "vorägnger gefunden"<<std::endl; 
+                        curr=otherTo; 
+                        path.push_back(curr);
                     }
                 }
             }
             paths.push_back(path);
         }
     }
+
     if(auto erg=findUniq(paths)){
         std::cout << "ergebnis ist: ";
         //müssend ei Stirngs noch umdrehen:
@@ -60,8 +66,7 @@ int main(){
             //für p2 nur den ersten Buchstaben printen:
             std::cout <<p[0];
         }
-        std::cout <<"@"<<std::endl; 
-        // c:\Users\Björn Staats\Downloads\everybody_codes_e2024_q07_p2.txt
+        std::cout <<"@"<<std::endl;
     } else{
         std::cout << "no erg" <<std::endl;
     }
@@ -102,52 +107,4 @@ std::optional<std::vector<std::string>> findUniq(const std::vector<std::vector<s
 
     return std::nullopt;
 }
-    /*
-    std::cout << "lens size: "<<  lens.size() << std::endl;
-
-    std::vector<int> quantities;
-    quantities.reserve(maxValue+1);
-
-    std::cout << "max value: "<< maxValue << " at: " << *resIt << std::endl; 
-    //std::cout << "it first: "<<*lens.begin() << " it-last: "<<*lens.end()<<std::endl; 
-
-     
-    std::cout << "iterator test"<< std::endl; 
-    std::vector<int>::iterator it= lens.end();
-    it++; 
-    std::cout << *(it) << std::endl; 
-    std::cout << lens.size() << std::endl; 
-    for(std::vector<int>::iterator it= lens.begin(); it!= lens.end(); it++){
-        std::cout << *it << std::endl;
-        std::cout<< "naseweise"<< std::endl;  
-    }
-    for(int i=0; i< lens.size(); i++){
-        std::cout << lens[i] <<std::endl; 
-    }
-    std::cout << "iterator test ende"<< std::endl; 
     
-
-    for(int i=0; i<=maxValue; i++){
-        for(const int l: lens){
-            if(l==i){
-                quantities[i]++;
-            }
-        }
-    }
-    for(int i=0; i<=maxValue; i++){
-        std::cout << i << ": "<< quantities[i]<<std::endl;
-    }
-    int uniqLen;
-    for(int i=0; i<=maxValue; i++){
-        if(quantities[i]==1){
-            std::cout <<"found 1: "<< i <<std::endl;
-            uniqLen=i;
-        }
-    }
-    for(int i=0; i<paths.size(); i++){
-        if (lens[i]==uniqLen){
-            return paths[i];
-        }
-    }
-    return std::nullopt; 
-    */
