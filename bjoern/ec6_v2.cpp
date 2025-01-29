@@ -50,6 +50,7 @@ int main(){
                         // std::cout << "vorägnger gefunden"<<std::endl; 
                         curr=otherTo; 
                         path.push_back(curr);
+                        break; 
                     }
                 }
             }
