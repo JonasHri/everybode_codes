@@ -8,13 +8,24 @@
 
 std::optional<std::vector<std::string>> findUniq(const std::vector<std::vector<std::string>> paths);
 
+namespace std{
+    ostream& operator <<(ostream& os, const std::vector<std::string>& vl){
+        std::vector<std::string>rev = vl;
+        reverse(rev.begin(), rev.end());
+        for(const std::string l: rev){
+            os << l[0];
+        }
+        return os; 
+    }
+}
+
 int main(){
     // std::unordered_map<std::string, std::string> input;
     
     std::vector<std::pair<std::string, std::string>> in; 
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q06_p2.txt");
+    std::fstream file("everybody_codes_e2024_q06_p3.txt");
     if(!file.is_open()){
         std::cerr <<"file not foiund"<<std::endl;
     }
@@ -40,7 +51,7 @@ int main(){
     std::string curr; 
     for(const auto& [to, from]: in){
         if(from.contains("@")){  //gibts in c++23 :)
-            std::cout << "checking one "<<std::endl; 
+            // std::cout << "checking one "<<std::endl; 
             path.clear();
             path.push_back(to);
             curr= to; 
@@ -54,10 +65,12 @@ int main(){
                     }
                 }
             }
+            // std::cout << curr <<std::endl; 
             paths.push_back(path);
         }
     }
 
+    
     if(auto erg=findUniq(paths)){
         std::cout << "ergebnis ist: ";
         //müssend ei Stirngs noch umdrehen:
@@ -72,6 +85,8 @@ int main(){
         std::cout << "no erg" <<std::endl;
     }
 
+    std::cout<< paths[0]<<std::endl; 
+    std::cout<< paths[10] <<std::endl; 
     return 0; 
 }
 
