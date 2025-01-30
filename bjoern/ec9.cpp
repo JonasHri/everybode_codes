@@ -28,24 +28,15 @@ int main(){
 }
 
 int numDots(int brigthnes){
-    if(brigthnes==1){
-        return 1;
-    } 
-    if(brigthnes==3){
+    if(brigthnes==1 || brigthnes==3 || brigthnes==5 || brigthnes==10){
         return 1;
     }
-    if(brigthnes==5){
-        return 1; 
-    }
-    if(brigthnes==10){
-        return 1;
-    }
-
-    if(brigthnes-10>0){
+    
+    if(brigthnes>10){
         brigthnes-=10;
-    }else if(brigthnes-5>0){
+    }else if(brigthnes>5){
         brigthnes -=5;
-    }else if(brigthnes-3>0){
+    }else if(brigthnes>3){
         brigthnes -=3;
     } else{
         brigthnes--;
