@@ -13,7 +13,7 @@ int main(){
     std::vector<int> sparkballs;
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q09_p2.txt");
+    std::fstream file("everybody_codes_e2024_q09_p3.txt");
     if(!file.is_open()){
         std::cerr <<"file not found"<<std::endl;
     }
@@ -22,22 +22,38 @@ int main(){
     }
     setupMins(); 
 
-    std::vector<int> test={33,41,55,99};
+    std::vector<int> test={156488,352486,546212};
     int erg=0;
     // erg=numDots(test[0]); 
     for(int ball: sparkballs){
-        std::cout <<"starting with "<<ball <<std::endl; 
-        int tmp= numDots(ball);
-        erg += tmp;
-        std::cout <<"erg: "<< tmp<<std::endl; 
+        int bigHalf= ball/2, smallHalf=ball/2; 
+        int fewest= std::numeric_limits<int>::max();
+        int lowsum=0;
+        while(bigHalf-smallHalf < 100){
+            int tmp=numDots(bigHalf) + numDots(smallHalf);
+            if(tmp < fewest){
+                fewest = tmp;
+                lowsum= tmp;
+            }
+            bigHalf++; 
+            smallHalf--; 
+        }
+        std::cout <<lowsum <<std::endl; 
+        erg += lowsum; 
     }
+    // for(int ball: sparkballs){
+    //     std::cout <<"starting with "<<ball <<std::endl; 
+    //     int tmp= numDots(ball);
+    //     erg += tmp;
+    //     std::cout <<"erg: "<< tmp<<std::endl; 
+    // }
     std::cout << erg << std::endl; 
 
     return 0; 
 }
 
 std::unordered_map<int,int> mins;
-std::vector<int> coins ={1, 3, 5, 10, 15, 16, 20, 24, 25, 30};
+std::vector<int> coins ={1, 3, 5, 10, 15, 16, 20, 24, 25, 30, 37, 38, 49, 50, 74, 75, 100, 101};
 
 // 1, 3, 5, 10, 15, 16, 20, 24, 25, 30
 void setupMins(){
