@@ -26,20 +26,18 @@ int main(){
     int erg=0;
     // erg=numDots(test[0]); 
     for(int ball: sparkballs){
-        int bigHalf= ball/2, smallHalf=ball/2; 
         int fewest= std::numeric_limits<int>::max();
-        int lowsum=0;
-        while(bigHalf-smallHalf < 100){
-            int tmp=numDots(bigHalf) + numDots(smallHalf);
-            if(tmp < fewest){
-                fewest = tmp;
-                lowsum= tmp;
+        for(int i=0; i<=50-ball%2 ; i++){
+            int tmp1=numDots(ball/2 -i);
+            int tmp2=numDots( ball/2 +i+ ball%2);
+            int calcedDots = tmp1 + tmp2;
+            if(calcedDots<fewest){
+                fewest= calcedDots;
+                std::cout <<"fewest: "<< fewest<<" left: "<< tmp1 << " right " <<tmp2 << std::endl;  
             }
-            bigHalf++; 
-            smallHalf--; 
         }
-        std::cout <<lowsum <<std::endl; 
-        erg += lowsum; 
+        std::cout <<"fewest: "<< fewest<<std::endl; 
+        erg += fewest; 
     }
     // for(int ball: sparkballs){
     //     std::cout <<"starting with "<<ball <<std::endl; 
