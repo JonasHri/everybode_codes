@@ -4,12 +4,17 @@
 #include <string>
 
 char findPattern(const std::vector<std::string>& field, int i, int j);
+char findPattern_p2(const std::vector<std::string>& field, int x, int y, size_t col, size_t row);
+int calcWholeMap(const std::vector<std::string>& field);
+int oneWord(const std::vector<std::string>& field, size_t row, size_t col);
+int patternToPower(char&& c); 
+
 
 int main(){
     std::vector<std::string> field;
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q10_p1.txt");
+    std::fstream file("everybody_codes_e2024_q10_p2.txt");
     if(!file.is_open()){
         std::cerr <<"file not found"<<std::endl;
     }
@@ -17,17 +22,68 @@ int main(){
         field.push_back(line);
     }
 
-    std::string erg="";
-    for(int i=2; i<field.size()-2; i++){
-        for(int j=2; j<field[0].size()-2; j++){
-            std::cout << "i:"<<i<<" j:"<<j<<std::endl; 
-            field[i][j] = findPattern(field, i, j); 
-            erg+= (field[i][j]);
+    // for(const std::string& str: field){
+    //     std::cout << str<<std::endl; 
+    // }
+    // std::string erg="";
+    // for(int i=2; i<field.size()-2; i++){
+    //     for(int j=2; j<field[0].size()-2; j++){
+    //         std::cout << "i:"<<i<<" j:"<<j<<std::endl; 
+    //         field[i][j] = findPattern(field, i, j); 
+    //         erg+= (field[i][j]);
+    //     }
+    // }
+    int erg= calcWholeMap(field); 
+    std::cout << erg <<std::endl; 
+
+    return 0; 
+}
+
+int calcWholeMap(const std::vector<std::string>& field){
+    int erg=0; 
+    for(size_t row=0; row<field.size(); row+=9){
+        // std::cout << field[row] <<std::endl; 
+        for(size_t col=0; col< field[row].length(); col+=9){
+            erg+= oneWord(field, row, col);
         }
     }
+    return erg; 
+}
 
-    std::cout << erg <<std::endl; 
-    return 0; 
+int oneWord(const std::vector<std::string>& field, size_t row, size_t col){
+    int erg=0;
+    int cnt=1; 
+    for(int i=row+2; i<row+6; i++){
+        for(int j=col+2; j<col+6; j++){
+            // std::cout << i<<","<<j <<std::endl; 
+            erg+= cnt* patternToPower(findPattern_p2(field, i, j, col, row));
+            cnt++; 
+        }
+    }
+    return erg; 
+}
+
+int patternToPower(char&& c){
+    int erg= c- 64;
+    // std::cout<< c<<":"<<erg <<std::endl;
+    return erg;
+}
+
+char findPattern_p2(const std::vector<std::string>& field, int x, int y, size_t col, size_t row){
+    char erg='#';
+    for(size_t i=row; i<row+8; i++){
+        char c = field[i][y];
+        if(c=='.'){
+            continue;
+        }
+        for(size_t j=col; j<col+8; j++){
+            char d= field[x][j];
+            if(c==d){
+                erg=c;
+            }
+        }
+    }
+    return erg; 
 }
 
 char findPattern(const std::vector<std::string>& field, int i, int j){
@@ -46,3 +102,4 @@ char findPattern(const std::vector<std::string>& field, int i, int j){
     }
     return erg;
 }
+
