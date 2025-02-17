@@ -44,10 +44,10 @@ int main(){
     //         erg+= (field[i][j]);
     //     }
     // }
-    std::cout << field << std::endl;
+    // std::cout << field << std::endl;
     int erg= calcWholeMap(field); 
     std::cout << erg <<std::endl; 
-    std::cout << field <<std::endl; 
+    // std::cout << field <<std::endl; 
 
     return 0; 
 }
@@ -63,6 +63,7 @@ int calcWholeMap(std::vector<std::string>& field){
         }
         break;
     }
+    std::cout << field; 
     for(size_t row=0; row<=field.size()-8; row+=6){
         for(size_t col=0; col<= field[row].length()-8; col+=6){
             questionmark(field, row, col);
@@ -103,6 +104,7 @@ void questionmark(std::vector<std::string>& field, size_t row, size_t col){
                 if(i<2+row || i>6+row){
                     for(int k= col+2; k<col+6; k++){
                         if(field[i][k]=='#'){
+                            std::cout << i<< " compared to row: "<<row<<std::endl; 
                             zeileD= i;
                             spalteD=k;
                             zeileQ=i;
@@ -113,6 +115,7 @@ void questionmark(std::vector<std::string>& field, size_t row, size_t col){
                 } else{
                     for(int k=row; k< row+6; k++){
                         if(field[k][j]=='#'){
+                            std::cout << j<< " compared to row: "<<col<<std::endl;
                             zeileD= k;
                             spalteD=j;
                             zeileQ =i;
@@ -124,7 +127,6 @@ void questionmark(std::vector<std::string>& field, size_t row, size_t col){
         }
     }
     std::cout << "hier"<<std::endl; 
-
     std::vector<int> pos={0,1,6,7};
     char replacer='+';
     if(zeileD==zeileQ){
@@ -149,7 +151,7 @@ void questionmark(std::vector<std::string>& field, size_t row, size_t col){
         }
     }
     std::cout << zeileQ<<","<<spalteQ<<std::endl; 
-
+    std::cout << zeileD << ";"<< spalteD<<std::endl; 
     field[zeileQ][spalteQ]=replacer; 
     std::cout << "hier"<<std::endl; 
 
@@ -164,13 +166,13 @@ char findPattern_p2(std::vector<std::string>& field, int x, int y, size_t row, s
         }
         for(size_t j=col; j<col+8; j++){
             char d= field[x][j];
-            std::cout << "c,d: "<<c<<", "<<d<<" at: "<<i<<","<<y<<" and: "<< x<<", "<<j; 
+            // std::cout << "c,d: "<<c<<", "<<d<<" at: "<<i<<","<<y<<" and: "<< x<<", "<<j; 
             if(c==d){
-                std::cout <<"found "<<c <<std::endl; 
+                // std::cout <<"found "<<c <<std::endl; 
                 erg=c;
                 break;
             }
-            std::cout <<std::endl; 
+            // std::cout <<std::endl; 
         }
     }
     field[x][y]=erg; 
