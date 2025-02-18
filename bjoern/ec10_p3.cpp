@@ -39,9 +39,12 @@ int main(){
         field.push_back(line);
     }
     int erg=0; 
-    for(int i=0; i<=field.size()-8; i+=6){
-        for(int j=0; j<= field.size()-8; j+=6){
-            erg+= solveOneSquare(field, i, j);
+    for(int runs=0; runs<10; runs++){
+        erg=0; 
+        for(int i=0; i<=field.size()-8; i+=6){
+            for(int j=0; j<= field.size()-8; j+=6){
+                erg+= solveOneSquare(field, i, j);
+            }
         }
     }
     std::cout << erg << std::endl; 
@@ -115,13 +118,17 @@ std::optional<char> findQuestionmark(std::vector<std::string>& field, int startr
     std::vector<int> insides={2,3,4,5};
     bool hasPartner=false;
     char missingC='+';
+    bool foundOneMatch=false; 
     if(isInCol){ //if the ? is in the col then 1 symbol in row is unmatched 
         for(const int& border: dirs){
             hasPartner=false; 
             for(const int& inside: insides){
                 if(field[pRow][startcol+border]==field[pRow][startcol+inside]){
+                    if(foundOneMatch){
+                        return std::nullopt;
+                    }
                     hasPartner=true;
-                    break;
+                    foundOneMatch=true;
                 }
             }
             if(!hasPartner){
@@ -135,8 +142,11 @@ std::optional<char> findQuestionmark(std::vector<std::string>& field, int startr
             for(const int& inside: insides){
                 // std::cout<< field[startrow+border][pCol]<<","<<field[startrow+inside][pCol]<<" "<< (field[startrow+border][pCol]==field[startrow+inside][pCol])<<std::endl; 
                 if(field[startrow+border][pCol]==field[startrow+inside][pCol]){
+                    if(foundOneMatch){
+                        return std::nullopt;
+                    }
                     hasPartner=true;
-                    break;
+                    foundOneMatch=true;
                 }
             }
             if(!hasPartner){
