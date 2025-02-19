@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <unordered_map>
+#include <limits>
 
 namespace std{
     ostream& operator<< (ostream& os, const vector<string>& vs){
@@ -12,13 +13,15 @@ namespace std{
         }
         return os;
     }
-}
+}; 
+
+int calcNumTermites(std::unordered_map<std::string,std::vector<std::string>>& conversions, const std::string& startTermite);
 
 int main(){
     std::unordered_map<std::string,std::vector<std::string>> conversions;
 
     std::string line;
-     std::fstream file("everybody_codes_e2024_q11_p2.txt");
+     std::fstream file("everybody_codes_e2024_q11_p3.txt");
     if(!file.is_open()){
         std::cerr <<"file not found"<<std::endl;
     }
@@ -35,19 +38,37 @@ int main(){
         conversions.insert({origin, dest});
     }
 
-    std::string startTermite="Z";
+    int biggest=-1;
+    int smallest= std::numeric_limits<int>::max(); 
+    for(const auto& starttermite: conversions){
+        std::cout << "starting with: "<< starttermite.first <<std::endl; 
+        int num= calcNumTermites(conversions, starttermite.first);
+        if(num<smallest){
+            smallest=num;
+        }
+        if(num>biggest){
+            biggest=num;
+        }
+    }
+
+    int diff= biggest-smallest;
+    std::cout << diff << std::endl;
+
+    return 0; 
+}
+
+
+int calcNumTermites(std::unordered_map<std::string,std::vector<std::string>>& conversions, const std::string& startTermite){
     std::vector<std::string> currentTermites; 
     currentTermites.push_back(startTermite);
-    for(int i=0; i<10; i++){
+    for(int i=0; i<20; i++){
         std::vector<std::string> nextGen; 
-        for(const std::string s: currentTermites){
+        for(const std::string& s: currentTermites){
             for(std::string termiteToAdd: conversions[s]){
                 nextGen.push_back(termiteToAdd);
             }
         }
         currentTermites=nextGen; 
     }
-
-    std::cout<< currentTermites.size() <<std::endl; 
-    
+    return currentTermites.size(); 
 }
