@@ -18,7 +18,7 @@ int main(){
     std::unordered_map<std::string,std::vector<std::string>> conversions;
 
     std::string line;
-     std::fstream file("everybody_codes_e2024_q11_p1.txt");
+     std::fstream file("everybody_codes_e2024_q11_p2.txt");
     if(!file.is_open()){
         std::cerr <<"file not found"<<std::endl;
     }
@@ -35,10 +35,10 @@ int main(){
         conversions.insert({origin, dest});
     }
 
-    std::string startTermite="A";
+    std::string startTermite="Z";
     std::vector<std::string> currentTermites; 
     currentTermites.push_back(startTermite);
-    for(int i=0; i<4; i++){
+    for(int i=0; i<10; i++){
         std::vector<std::string> nextGen; 
         for(const std::string s: currentTermites){
             for(std::string termiteToAdd: conversions[s]){
