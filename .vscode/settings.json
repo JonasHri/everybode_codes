@@ -60,6 +60,7 @@
         "optional": "cpp",
         "deque": "cpp",
         "stack": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "queue": "cpp"
     }
 }
