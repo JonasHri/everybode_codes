@@ -47,7 +47,7 @@ int main(){
     std::vector<std::string> map; 
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q13_p1.txt");
+    std::fstream file("everybody_codes_e2024_q13_p2.txt");
     if(!file.is_open()){
         std::cerr <<"file not found"<<std::endl;
     }
@@ -62,9 +62,9 @@ int main(){
         return 1;
     }
 
-    if(auto goal= findPos(map, 'E')){
-        std::cout << *goal <<std::endl; 
-    }
+    // if(auto goal= findPos(map, 'E')){
+    //     std::cout << *goal <<std::endl; 
+    // }
     // std::cout << map << std::endl; 
 
 
@@ -74,11 +74,11 @@ int main(){
 
     dists[startpos.first][startpos.second]=0;
 
-    std::cout << map << std::endl; 
+    // std::cout << map << std::endl; 
     int erg= calcPath2(map, dists, startpos);
     std::cout << erg << std::endl; 
 
-    std::cout << dists<< std::endl; 
+    // std::cout << dists<< std::endl; 
 
     return 0; 
 }
@@ -91,7 +91,7 @@ int calcPath2(std::vector<std::string>& map, std::vector<std::vector<int>>& dist
     std::vector<std::pair<int, int>> dirs={ {0,1}, {1,0}, {-1,0}, {0,-1} };
     while(!q.empty()){
         std::pair<int,int> currPos = q.top().second;
-        std::cout << "Visiting: "<< currPos.first<<", "<< currPos.second << std::endl; 
+        // std::cout << "Visiting: "<< currPos.first<<", "<< currPos.second << std::endl; 
         int currDist= q.top().first; 
         q.pop();
         if(map[currPos.first][currPos.second]=='E'){
