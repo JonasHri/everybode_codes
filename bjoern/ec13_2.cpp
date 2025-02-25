@@ -15,6 +15,7 @@ int calcHeightDiff(const int& prev, const int& curr);
 void calcNextDist(const std::vector<std::string>& map, std::vector<std::vector<int>>& dists, int row, int col);
 int calcPath(std::vector<std::string>& map, std::vector<std::vector<int>>& dists, std::pair<int,int> pos);
 int calcPath2(std::vector<std::string>& map, std::vector<std::vector<int>>& dists, std::pair<int,int> startPos); 
+int iterateThroughBorder(const std::vector<std::string>& map, const std::vector<std::vector<int>>& dists); 
 
 
 namespace std{
@@ -27,7 +28,7 @@ namespace std{
     ostream& operator<<(ostream& os, const std::vector<vector<int>>& vi){
         for(const vector<int>& row: vi){
             for(const int& val: row){
-                if(val== std::numeric_limits<int>::max()){
+                if(val== std::numeric_limits<int>::max()-10){
                     os << "# ";
                 } else{
                     os << val << " ";
@@ -47,7 +48,7 @@ int main(){
     std::vector<std::string> map; 
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q13_p2.txt");
+    std::fstream file("everybody_codes_e2024_q13_p3.txt");
     if(!file.is_open()){
         std::cerr <<"file not found"<<std::endl;
     }
@@ -70,17 +71,72 @@ int main(){
 
     // make int vector for distances 
 
-    std::vector<std::vector<int>> dists(map.size(), std::vector<int>(map[0].size(), std::numeric_limits<int>::max()));
+    std::vector<std::vector<int>> dists(map.size(), std::vector<int>(map[0].size(), std::numeric_limits<int>::max()-10));
 
-    dists[startpos.first][startpos.second]=0;
+    // dists[startpos.first][startpos.second]=0;
 
     // std::cout << map << std::endl; 
-    int erg= calcPath2(map, dists, startpos);
+    // int erg= calcPath2(map, dists, startpos);
+    int erg = iterateThroughBorder(map, dists);
     std::cout << erg << std::endl; 
 
     // std::cout << dists<< std::endl; 
 
     return 0; 
+}
+
+int iterateThroughBorder(const std::vector<std::string>& map, const std::vector<std::vector<int>>& dists){
+    int shortest= std::numeric_limits<int>::max(); 
+    for(int i=1; i< map.size()-1; i++){
+        std::vector<std::string> visited= map; 
+        std::vector<std::vector<int>> dis = dists;
+        dis[i][0]=0;
+        int tmp1=calcPath2(visited, dis, std::make_pair(i, 0));
+        visited=map;
+        dis= dists; 
+        dis[i][map[0].length()-1]=0;
+        int tmp2=calcPath2(visited, dis, std::make_pair(i, map[0].length()-1)); //-2, weil mein testdiung irgndwie ein leeren eintrag
+        // std::cout << "wir starten bei col: "<< map[0].length()-1 <<std::endl; 
+        // std::cout << "map size: "<<map.size() <<" und: "<< map[0].size() <<std::endl; 
+        // for(int i=0; i< map[0].size(); i++){
+        //     std::cout << i<<": "<<map[1][i] <<", ";
+        //     if(map[1][i]=='\0'){
+        //         std::cout<<"juhuuuuuuuuuu"; 
+        //     } 
+        // }
+        // std::cout << std::endl; 
+        // std::cout << dis; 
+        // std::cout << tmp1 << "\n" <<std::endl; 
+        // if(tmp1<0){
+        //     std::cout << tmp1 << " at: "<< i <<", 0"<<std::endl; 
+        // }
+        // if(tmp2<0){
+        //     std::cout << tmp2 << " at: "<< i <<", "<<map[0].length()-1<<std::endl; 
+        // }
+        if(tmp1<shortest){
+            shortest=tmp1;
+        }
+        if(tmp2<shortest){
+            shortest=tmp2;
+        }
+    }
+    for(int i=1; i<map[0].length()-1; i++){
+        std::vector<std::string> visited= map; 
+        std::vector<std::vector<int>> dis = dists;
+        dis[0][i]=0; 
+        int tmp1=calcPath2(visited, dis, std::make_pair(0, i));
+        visited=map;
+        dis= dists;
+        dis[map.size()-1][i]=0; 
+        int tmp2=calcPath2(visited, dis, std::make_pair(map.size()-1, i));
+        if(tmp1<shortest){
+            shortest=tmp1;
+        }
+        if(tmp2<shortest){
+            shortest=tmp2;
+        }
+    }
+    return shortest; 
 }
 
 int calcPath2(std::vector<std::string>& map, std::vector<std::vector<int>>& dists, std::pair<int,int> startPos){
@@ -89,6 +145,10 @@ int calcPath2(std::vector<std::string>& map, std::vector<std::vector<int>>& dist
                     std::greater<std::pair<int, std::pair<int, int>>>> q;
     q.push({0, startPos});
     std::vector<std::pair<int, int>> dirs={ {0,1}, {1,0}, {-1,0}, {0,-1} };
+    if(map[startPos.first][startPos.second]=='#'){
+        std::cout<<startPos.first<<"/"<<map.size()<<", "<<startPos.second<<"/"<<map[0].size()<<std::endl; 
+        return  std::numeric_limits<int>::max() ;
+    }
     while(!q.empty()){
         std::pair<int,int> currPos = q.top().second;
         // std::cout << "Visiting: "<< currPos.first<<", "<< currPos.second << std::endl; 
@@ -106,24 +166,44 @@ int calcPath2(std::vector<std::string>& map, std::vector<std::vector<int>>& dist
             if(map[x][y]=='#'){
                 continue;
             }
-            int prevheight= map[currPos.first][currPos.second] -'0';
-            if(map[currPos.first][currPos.second]=='S' || map[currPos.first][currPos.second]=='E'){
+            //  für part3: nicht aufm rand umher eiern:
+            if(x==0 || y==0 || x==map.size()-1 || y==map[0].length()-1 ){ //TODO: hier -2, wegen testding 
+                continue; 
+            }
+            int prevheight= map[currPos.first][currPos.second] - '0';
+            if(map[currPos.first][currPos.second]=='S' || map[currPos.first][currPos.second]=='E' || map[currPos.first][currPos.second]=='\r'){
                 prevheight=0; 
             }
+            if(prevheight<0){
+                std::cout << map[currPos.first][currPos.second] << " @ "<<currPos.first<<", "<<currPos.second <<std::endl; 
+            }
             int currheight= map[x][y] -'0';
-            if(map[x][y]=='S' || map[x][y]=='E'){
+            if(map[x][y]=='S' || map[x][y]=='E' || map[x][y]=='\r'){ //irgendwie sind da irgendwo diese carriage return dinger drin x.x
                 currheight= 0; 
             }
             int newDist = dists[currPos.first][currPos.second] + calcHeightDiff(prevheight, currheight) + 1;
+            if(calcHeightDiff(prevheight, currheight)> 10){
+                std::cout << calcHeightDiff(prevheight, currheight) <<" with: "<< prevheight << ", "<<currheight <<std::endl; 
+                std::cout << "prevheight: "<< prevheight<< " map pos: "<< currPos.first<<" "<<currPos.second<<std::endl;
+                std::cout << "currheight: "<< currheight<<" map pos: "<<x<<" "<<y <<std::endl; 
 
+            }
             if (newDist < dists[x][y]) {
+                if(newDist <0){
+                    std::cout <<"illegal value encountered: " <<newDist <<" at: " << startPos<<std::endl;
+                    std::cout << dists[currPos.first][currPos.second] << ", "<<calcHeightDiff(prevheight, currheight)<<std::endl; 
+                    continue;
+                }
                 dists[x][y] = newDist;
+                if (map[x][y] == '#') {
+                    std::cout << "WARNING: Trying to push '#' into queue at (" << x << ", " << y << ")" << std::endl;
+                }
                 q.push({newDist, {x, y}});
             } 
         }
-        map[currPos.first][currPos.second] = '#'; 
+        // map[currPos.first][currPos.second] = '#'; 
     }
-    return -1; 
+    return std::numeric_limits<int>::max() ; 
 }
 
 
