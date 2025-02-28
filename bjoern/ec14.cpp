@@ -4,109 +4,98 @@
 #include <vector>
 #include <sstream>
 #include <unordered_map>
-#include <limits>
-#include <optional>
-#include <queue>
-#include <clocale>
+#include <unordered_set>
 #include <algorithm>
+#include <tuple>
 
-void markMap(std::vector<std::vector<std::vector<int>>>& uniqs, int x, int y, int z, char dir, int len);
-int countMap(const std::vector<std::vector<std::vector<int>>>& uniqs);
+// Custom hash function for tuples
+struct TupleHash {
+    template <typename T1, typename T2, typename T3>
+    size_t operator()(const std::tuple<T1, T2, T3>& tuple) const {
+        auto [x, y, z] = tuple;
+        return std::hash<T1>{}(x) ^ (std::hash<T2>{}(y) << 1) ^ (std::hash<T3>{}(z) << 2);
+    }
+};
 
-int main(){
-    std::vector<std::pair<char, int>> grothPattern; 
+// 3D Position Struct
+struct Vector3D {
+    int x, y, z;
+    bool visited; 
+    Vector3D(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z), visited(false) {}
+    void markVisited(){
+        this->visited= true; 
+    }
+};
+
+// Define the unordered_set with custom hash
+using Grid = std::unordered_set<std::tuple<int, int, int>, TupleHash>;
+
+void markMap(Grid &grid, Vector3D &pos, char dir, int len);
+int countMap(const Grid &grid);
+std::vector<std::pair<char, int>> parseInputFile(const std::string &filename);
+
+int main() {
+    auto growthPattern = parseInputFile("everybody_codes_e2024_q14_p2.txt");
+    if (growthPattern.empty()) {
+        std::cerr << "No valid input data." << std::endl;
+        return 1;
+    }
+
+    Vector3D position;
+    Grid visitedCells;
+
+    for (const auto &[dir, len] : growthPattern) {
+        markMap(visitedCells, position, dir, len);
+    }
+
+    std::cout << "Result: " << countMap(visitedCells) << std::endl;
+    return 0;
+}
+
+std::vector<std::pair<char, int>> parseInputFile(const std::string &filename) {
+    std::vector<std::pair<char, int>> growthPattern;
+    std::ifstream file(filename);
+    if (!file) {
+        std::cerr << "File not found: " << filename << std::endl;
+        return {};
+    }
 
     std::string line;
-    std::fstream file("everybody_codes_e2024_q14_p1.txt");
-    if(!file.is_open()){
-        std::cerr <<"file not found"<<std::endl;
-    }
-    while(std::getline(file, line)){
-        std::stringstream ss;
-        ss << line; 
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
         std::string arg;
-        while(std::getline(ss, arg, ',')){
-            char c= arg.at(0);
-            int i= std::stoi(arg.substr(1));
-            grothPattern.push_back(std::make_pair(c, i));
+        while (std::getline(ss, arg, ',')) {
+            if (arg.empty()) continue;
+            growthPattern.emplace_back(arg[0], std::stoi(arg.substr(1)));
         }
     }
-
-    int x=0, y=0, z=0; //x: r-l, y= f-b, z= u-d
-    int maxheight=0; 
-    std::vector<std::vector<std::vector<int>>> uniqs(200, std::vector<std::vector<int>>(200, std::vector<int>(200, 0))); 
-
-
-
-    for(auto day: grothPattern){
-        // int x2=x, y2=y, z2=z;
-        char dir= day.first;
-        int len= day.second;
-        switch (dir){
-            case 'U': z+= len;
-                if (z>maxheight){
-                    maxheight=z;
-                }
-                markMap(uniqs, x, y, z, dir, len);
-                break;
-            case 'D': z-= len;
-                markMap(uniqs, x, y, z, dir, len);
-                break;
-            case 'R': x+=len;
-                markMap(uniqs, x, y, z, dir, len);
-                break;
-            case 'L': x-=len;
-                markMap(uniqs, x, y, z, dir, len);
-                break;
-            case 'F': y+=len;
-                markMap(uniqs, x, y, z, dir, len);
-                break;
-            case 'B': y-=len;
-                markMap(uniqs, x, y, z, dir, len);
-                break;
-            default: std::cerr << "illegal instruction: "<<dir<<std::endl; 
-        }
-        // std::cout<<"gone: "<<dir<<" by: "<<len<< " height now: "<< z<<std::endl; 
-        for(int i=0; i<len; i++){
-            
-        }
-    }
-    int erg= countMap(uniqs);
-    std::cout << erg <<std::endl; 
-
-    return 0; 
+    return growthPattern;
 }
 
-int countMap(const std::vector<std::vector<std::vector<int>>>& uniqs){
-    int cnt=0;
-    for(const auto& pl: uniqs){
-        for(const auto& p: pl){
-            for(const int& i: p){
-                if(i==1){
-                    cnt++;
-                }
-            }
+void markMap(Grid &grid, Vector3D &pos, char dir, int len) {
+    for (int i = 0; i < len; ++i) {
+        switch (dir) {
+            case 'U': grid.insert({pos.x, pos.y, pos.z + i}); break;
+            case 'D': grid.insert({pos.x, pos.y, pos.z - i}); break;
+            case 'R': grid.insert({pos.x + i, pos.y, pos.z}); break;
+            case 'L': grid.insert({pos.x - i, pos.y, pos.z}); break;
+            case 'F': grid.insert({pos.x, pos.y + i, pos.z}); break;
+            case 'B': grid.insert({pos.x, pos.y - i, pos.z}); break;
+            default: std::cerr << "Invalid instruction: " << dir << std::endl;
         }
     }
-    return cnt; 
+
+    // Update the position after movement
+    switch (dir) {
+        case 'U': pos.z += len; break;
+        case 'D': pos.z -= len; break;
+        case 'R': pos.x += len; break;
+        case 'L': pos.x -= len; break;
+        case 'F': pos.y += len; break;
+        case 'B': pos.y -= len; break;
+    }
 }
 
-void markMap(std::vector<std::vector<std::vector<int>>>& uniqs, int x, int y, int z, char dir, int len){
-    for(int i=0; i<len; i++){
-        switch (dir){
-            case 'U': uniqs[x][y][z+i]=1;
-                break;
-                case 'D': uniqs[x][y][z-i]=1;
-                break;
-            case 'R': uniqs[x+i][y][z]=1;
-                break;
-            case 'L': uniqs[x-i][y][z]=1;
-                break;
-            case 'F': uniqs[x][y+i][z]=1;
-                break;
-            case 'B': uniqs[x][y-1][z]=1;
-                break;
-            default: std::cerr << "Fiif"<<dir<<std::endl; 
-        }
-    }
+int countMap(const Grid &grid) {
+    return grid.size();
 }
