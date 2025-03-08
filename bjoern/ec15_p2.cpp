@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include <limits>
+#include <chrono>
 
 struct pairHash{
     std::size_t operator() (const std::pair<int,int>& p) const{
@@ -84,6 +85,7 @@ int main(){
             std::cout<< "Doing: "<< key <<std::endl; 
             std::vector<std::pair<std::pair<int,int>,int>> newDist;
             for(int start=0; start<dist.size(); start++){ // Für jeden startpunkt
+                std::cout << "Startpunkt #"<<start+1 << "/"<<dist.size() <<std::endl; 
                 std::vector<std::string> tmpMap= map; 
                 pos= dist[start].first; 
                 int traveled= dist[start].second;
@@ -92,9 +94,14 @@ int main(){
                 }
                 // std::cout <<"travelled: "<<traveled <<std::endl; 
                 for(int target=0; target< targets[key]; target++){ // Alle Vorkommnisse des jeweiligen Buchstabens
+                    auto start = std::chrono::high_resolution_clock::now();
+                    std::cout << "\t doing: "<< target+1 <<"/"<< targets[key]; 
                     std::pair<std::pair<int,int>,int> nextDist= bfs(tmpMap, key, pos);
                     // std::cout<<"New dist: " << nextDist.second + traveled << " additional: " << nextDist.second<<" travelled: "<<traveled << std::endl;
-                    newDist.push_back({nextDist.first, nextDist.second + traveled}); 
+                    newDist.push_back({nextDist.first, nextDist.second + traveled});
+                    auto end = std::chrono::high_resolution_clock::now();
+                    std::chrono::duration<double> duration = end - start;
+                    std::cout << " \t Dauer: " << duration.count() << " Sekunden." << std::endl;
                 }
             }
             dist= newDist; 
