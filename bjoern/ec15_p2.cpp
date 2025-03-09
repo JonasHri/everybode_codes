@@ -24,8 +24,7 @@ std::pair<int,int> operator+(const std::pair<int,int>& a, const std::pair<int,in
     return {a.first+b.first, a.second+b.second}; 
 }
 
-std::pair<std::pair<int,int>, int> bfs(std::vector<std::string>& map, const char& target, std::pair<int,int>& pos);
-
+std::vector<std::pair<std::pair<int,int>, int>> bfs(std::vector<std::string> map, const char& target, std::pair<int,int>& pos);
 int main(){
     std::vector<std::string> map;
 
@@ -82,27 +81,34 @@ int main(){
     do{
         std::cout << "run #"<<cnt << " current shortest: "<< shortestDist <<std::endl; 
         for(const char& key: keys){ //Für jeden Zielbuchstaben
-            std::cout<< "Doing: "<< key <<std::endl; 
+            std::cout<< "Doing: "<< key << " with # to find: "<<targets[key]<<std::endl; 
             std::vector<std::pair<std::pair<int,int>,int>> newDist;
             for(int start=0; start<dist.size(); start++){ // Für jeden startpunkt
+                auto timerStart = std::chrono::high_resolution_clock::now();
                 std::cout << "Startpunkt #"<<start+1 << "/"<<dist.size() <<std::endl; 
-                std::vector<std::string> tmpMap= map; 
                 pos= dist[start].first; 
                 int traveled= dist[start].second;
                 if(traveled> shortestDist){
                     continue;
                 }
-                // std::cout <<"travelled: "<<traveled <<std::endl; 
-                for(int target=0; target< targets[key]; target++){ // Alle Vorkommnisse des jeweiligen Buchstabens
-                    auto start = std::chrono::high_resolution_clock::now();
-                    std::cout << "\t doing: "<< target+1 <<"/"<< targets[key]; 
-                    std::pair<std::pair<int,int>,int> nextDist= bfs(tmpMap, key, pos);
-                    // std::cout<<"New dist: " << nextDist.second + traveled << " additional: " << nextDist.second<<" travelled: "<<traveled << std::endl;
-                    newDist.push_back({nextDist.first, nextDist.second + traveled});
-                    auto end = std::chrono::high_resolution_clock::now();
-                    std::chrono::duration<double> duration = end - start;
-                    std::cout << " \t Dauer: " << duration.count() << " Sekunden." << std::endl;
+                std::vector<std::pair<std::pair<int,int>,int>> nextDist= bfs(map, key, pos); //findet jedes Vorkommnis des Buchstabens 
+                for(const std::pair<std::pair<int,int>,int>& d: nextDist){
+                    newDist.push_back({d.first, d.second + traveled});
                 }
+                // std::cout <<"travelled: "<<traveled <<std::endl; 
+                // for(int target=0; target< targets[key]; target++){ // Alle Vorkommnisse des jeweiligen Buchstabens
+                //     auto start = std::chrono::high_resolution_clock::now();
+                //     std::cout << "\t doing: "<< target+1 <<"/"<< targets[key]; 
+                //     std::pair<std::pair<int,int>,int> nextDist= bfs(map, key, pos);
+                //     // std::cout<<"New dist: " << nextDist.second + traveled << " additional: " << nextDist.second<<" travelled: "<<traveled << std::endl;
+                //     newDist.push_back({nextDist.first, nextDist.second + traveled});
+                //     auto end = std::chrono::high_resolution_clock::now();
+                //     std::chrono::duration<double> duration = end - start;
+                //     std::cout << " \t Dauer: " << duration.count() << " Sekunden." << std::endl;
+                // }
+                auto timerEnd = std::chrono::high_resolution_clock::now();
+                std::chrono::duration<double> duration = timerEnd - timerStart;
+                std::cout << " \t Dauer: " << duration.count() << " Sekunden." << std::endl;
             }
             dist= newDist; 
         }
@@ -113,12 +119,14 @@ int main(){
         // Jetzt von jedem Endpunkt zum start zurück:
         // std::cout << "now back to start: "<<std::endl; 
         for(std::pair<std::pair<int,int>,int>& fin: dist){
-            std::vector<std::string> tmpMap= map;
             pos= fin.first; 
             // std::cout << pos.first <<", "<<pos.second << " With: " << fin.second<<std::endl; 
-            std::pair<std::pair<int,int>,int> nextDist= bfs(tmpMap, 'a', pos);
-            if(nextDist.second + fin.second < shortestDist){
-                shortestDist= nextDist.second + fin.second;
+            std::vector<std::pair<std::pair<int,int>,int>>nextDist= bfs(map, 'a', pos);
+            if(nextDist[0].second + fin.second < shortestDist){
+                shortestDist= nextDist[0].second + fin.second;
+            }
+            if(nextDist.size()>1){
+                std::cout << "zu viele startpunkte gefunden"<<std::endl; 
             }
         }
         // std::cout<<shortestDist <<std::endl; 
@@ -132,10 +140,12 @@ int main(){
     return 0;
 }
 
-std::pair<std::pair<int,int>, int> bfs(std::vector<std::string>& map, const char& target, std::pair<int,int>& pos){
+std::vector<std::pair<std::pair<int,int>, int>> bfs(std::vector<std::string> map, const char& target, std::pair<int,int>& pos){
+    std::vector<std::pair<std::pair<int,int>, int>> results;
+    auto timerStart = std::chrono::high_resolution_clock::now();
     std::queue<std::pair<std::pair<int,int>,int>> q;
     q.push({pos, 0});
-
+    int zähler=0; 
     std::unordered_set<std::pair<int,int>, pairHash> visited;
     std::vector<std::pair<int,int>> dirs {{1,0}, {-1,0}, {0,1}, {0,-1}};
     while(!q.empty()){
@@ -148,7 +158,12 @@ std::pair<std::pair<int,int>, int> bfs(std::vector<std::string>& map, const char
         if( at(map, currPos)== target){
             // Entferne das zeichen, dass es beim nächsten Durchlauf nicht wieder gefunden wird:
             at(map, currPos)='.';
-            return {currPos, currDist};
+            std::cout << "found: "<< zähler;
+            auto timerEnd = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = timerEnd - timerStart;
+            std::cout << " \t Dauer: " << duration.count() << " Sekunden." << std::endl; 
+            zähler++; 
+            results.push_back({currPos, currDist});
         }
 
         // Position als besucht markieren:
@@ -170,5 +185,5 @@ std::pair<std::pair<int,int>, int> bfs(std::vector<std::string>& map, const char
             q.push({nextPos, currDist+1});
         }
     }
-    return{{-1,-1}, -1}; 
+    return results; 
 }

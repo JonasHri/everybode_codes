@@ -61,6 +61,7 @@
         "deque": "cpp",
         "stack": "cpp",
         "algorithm": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "chrono": "cpp"
     }
 }
