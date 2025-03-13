@@ -86,16 +86,19 @@ int main(){
     }
     
     // Die Pfade zwischen jeden Startpunkt und Endpunkt berechnen
-    std::unordered_map<std::pair<char, char>, int> calcedPaths;
+    std::unordered_map<std::pair<char, char>, std::vector<int>> calcedPaths; // Vielleicht besser: als data ein vector<int> für alle distanzen??
     for(const char& startpoint: keys){
         std::vector<std::pair<int,int>> startpoints = startPositions[startpoint]; 
         for(std::pair<int,int> sp: startpoints){
             for(const char& endpoint: keys){
                 if(auto dists= bfs(map, endpoint, targets[endpoint], sp)){
                     auto d= *dists; 
+                    std::vector<int> distances;
                     for(const auto& d_dist: d){
-                        calcedPaths.insert({{startpoint, endpoint}, d_dist.second});
+                        distances.push_back(d_dist.second);
                     }
+                    std::sort(distances.front(), distances.back());
+                    calcedPaths.insert({{startpoint, endpoint}, distances});
                 }
             }
         }
@@ -103,6 +106,7 @@ int main(){
 
     // Kürzeste Distanz finden, die jeden Punkt besucht:
     
+
 
     return 0;
 }
