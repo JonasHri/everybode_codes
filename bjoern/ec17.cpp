@@ -98,7 +98,7 @@ int main(){
     std::vector<std::string> map;
     std::unordered_set<point, pointHash> stars;
     
-    std::fstream file("everybody_codes_e2024_q17_p1.txt");
+    std::fstream file("everybody_codes_e2024_q17_p2.txt");
     parseInput(file, map, stars);
     // int starcount=1; 
     // for(auto it=stars.begin(); it!= stars.end(); it++){
